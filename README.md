@@ -7,7 +7,7 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 
 ## 🖥️ Screenshot
 ### Full screen power menu
-![Full screen power menu](assets/screenshot.png)
+
 
 
 ## Features
