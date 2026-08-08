@@ -4,6 +4,12 @@ A GNOME Shell extension that adds a power button to the top panel. Clicking
 it opens a full-screen menu — with a blurred background —
 for quickly powering off, restarting, suspending, locking, or logging out.
 
+
+## 🖥️ Screenshot
+### Full screen power menu
+![Full screen power menu](assets/screenshot.png)
+
+
 ## Features
 
 - **One click, no sub-menu.** A single power icon in the top panel opens a
