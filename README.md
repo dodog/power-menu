@@ -44,7 +44,7 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 
    ```bash
    git clone https://github.com/dodog/power-menu.git \
-       ~/.local/share/gnome-shell/extensions/power-menu@mayday.sk
+       ~/.local/share/gnome-shell/extensions/power-menu@dodog.github.io
    ```
 
 3. Restart GNOME Shell:
@@ -52,7 +52,7 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 4. Enable the extension:
 
    ```bash
-   gnome-extensions enable power-menu@mayday.sk
+   gnome-extensions enable power-menu@dodog.github.io
    ```
 
    or use the **Extensions** app (`gnome-extensions-app`) to toggle it on.
