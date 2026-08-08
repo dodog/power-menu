@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 env:
-  UUID: power-menu@mayday.sk
+  UUID: power-menu@dodog.github.io
 
 jobs:
   package:
