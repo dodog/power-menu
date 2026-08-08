@@ -1,0 +1,35 @@
+name: Package GNOME extension
+
+# Builds the extension zip and attaches it to the GitHub Release whenever
+# a release is published.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+env:
+  UUID: power-menu@mayday.sk
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Stage extension files
+        run: |
+          mkdir -p build
+          cp -r src/. build/
+
+      - name: Package extension
+        run: |
+          cd build
+          zip -r "../${UUID}.zip" . -x '.*'
+
+      - name: Attach zip to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.UUID }}.zip
