@@ -1,5 +1,5 @@
 {
-    "uuid": "power-menu@mayday.sk",
+    "uuid": "power-menu@dodog.github.io",
     "name": "Power Menu",
     "description": "Adds a power button to the top panel. Clicking it opens a beautiful full-screen menu with a blurred background and buttons for Power Off, Restart, Suspend, Lock and Log Out. Click anywhere outside the buttons (or press Escape) to dismiss.",
     "shell-version": ["49", "50"],
