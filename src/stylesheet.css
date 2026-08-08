@@ -1,0 +1,63 @@
+/* Opaque backstop under the blurred background (safety net). */
+.power-menu-base {
+    background-color: #000000;
+}
+
+/* Click-outside-to-close catcher. Transparent on purpose: the real lock
+ * screen has no extra scrim beyond the blur's own dimming. */
+.power-menu-dim {
+    background-color: transparent;
+}
+
+/* Non-clickable gap between adjacent buttons' hit areas. */
+.power-menu-box {
+    spacing: 10px;
+}
+
+/* The click/tap target, padded beyond the visible icon+label so a
+ * near-miss click still registers. */
+.power-menu-button {
+    background-color: transparent;
+    /* Reserved at all times so :focus can change color without resizing
+     * the button (avoids a layout jump). */
+    border: 1px solid transparent;
+    /* top | right | bottom | left */
+    padding: 0px 25px 30px 25px;
+    border-radius: 12px;
+}
+
+/* Keyboard-focus look: darker fill + light border, no glow. */
+.power-menu-button:focus {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+/* Fixed width so visible layout stays put regardless of label length. */
+.power-menu-content {
+    width: 108px;
+}
+
+.power-menu-icon {
+    icon-size: 48px;
+    color: #ffffff;
+}
+
+/* Same size as the real icon; opacity animated on hover in JS. */
+.power-menu-icon-glow {
+    icon-size: 48px;
+    color: #ffffff;
+}
+
+.power-menu-label {
+    color: #ffffff;
+    font-size: 13px;
+    /* 400 (normal) instead of a lighter weight -- thinner weights render
+     * soft/blurry at this size on a blurred backdrop. */
+    font-weight: 400;
+    text-align: center;
+    padding-top: 2px;
+    /* Caps width so long translations wrap to two lines instead of
+     * overflowing; see line_wrap in powerMenuOverlay.js. */
+    width: 96px;
+    line-height: 1.15;
+}
