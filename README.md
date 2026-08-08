@@ -31,11 +31,6 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 
 ## Installation
 
-### From extensions.gnome.org
-
-*(Once published)* search for **Power Menu** on
-[extensions.gnome.org](https://extensions.gnome.org) and toggle it on.
-
 ### Manual installation
 
 1. Download or clone this repository.
