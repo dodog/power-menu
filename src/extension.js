@@ -8,7 +8,8 @@ export default class PowerMenuExtension extends Extension {
     enable() {
         this._overlay = null;
         this._indicator = new PowerMenuIndicator(this);
-        Main.panel.addToStatusArea(this.uuid, this._indicator);
+        // position -1 in the 'right' box means "append at the end"
+        Main.panel.addToStatusArea(this.uuid, this._indicator, -1, 'right');
     }
 
     disable() {
