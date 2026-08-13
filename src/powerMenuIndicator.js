@@ -9,7 +9,7 @@ export const PowerMenuIndicator = GObject.registerClass({
     GTypeName: 'PowerMenuExtension_PowerMenuIndicator',
 }, class PowerMenuIndicator extends PanelMenu.Button {
     constructor(extension) {
-        // dontCreateMenu = true: this is a plain button, not a dropdown menu.
+        // Button in the panel that opens the power menu overlay.
         super(0.0, _('Power Menu'), true);
         this._extension = extension;
 

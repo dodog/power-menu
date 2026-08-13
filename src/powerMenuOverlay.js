@@ -12,14 +12,13 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-// Reuses gnome-shell's own translations instead of shipping .po files.
-// Tries a few known msgid/context candidates per string, since exact
-// msgids drift across shell versions.
+// Reuses gnome-shell's own translations
+// Tries a few known msgid/context candidates per string
 function sysLabel(candidates) {
     for (const [msgid, context] of candidates) {
-        const translated = context
-            ? GLib.dpgettext2('gnome-shell', context, msgid)
-            : GLib.dgettext('gnome-shell', msgid);
+        const translated = context ?
+            GLib.dpgettext2('gnome-shell', context, msgid) :
+            GLib.dgettext('gnome-shell', msgid);
         if (translated !== msgid)
             return translated;
     }
@@ -41,7 +40,7 @@ function callDBusAsync(bus, name, objectPath, iface, method, params) {
             try {
                 connection.call_finish(result);
             } catch (e) {
-                console.error(e, `Power Menu: ${method} failed`);
+                console.error(`Power Menu: ${method} failed`, e);
                 Main.notifyError(_('Power Menu'), e.message);
             }
         });
@@ -60,28 +59,35 @@ function sessionLogout(mode) {
         'Logout', new GLib.Variant('(u)', [mode]));
 }
 
-const ACTIONS = [
-    {
+const ACTIONS = [{
         icon: 'system-shutdown-symbolic',
-        label: () => sysLabel([['Power Off', 'search-result'], ['Power Off', null]]),
+        label: () => sysLabel([
+            ['Power Off', 'search-result'],
+            ['Power Off', null]
+        ]),
         activate: () => login1('PowerOff'),
     },
     {
         icon: 'system-reboot-symbolic',
-        label: () => sysLabel([['Restart', 'search-result'], ['Restart', null]]),
+        label: () => sysLabel([
+            ['Restart', 'search-result'],
+            ['Restart', null]
+        ]),
         activate: () => login1('Reboot'),
     },
     {
         icon: 'weather-clear-night-symbolic',
-        label: () => sysLabel([['Suspend', null]]),
+        label: () => sysLabel([
+            ['Suspend', null]
+        ]),
         activate: () => SystemActions.getDefault().activateSuspend(),
     },
     {
         icon: 'system-lock-screen-symbolic',
-        // Prefer short "Lock" over "Lock Screen" -- the latter runs too
-        // long in some languages (e.g. Slovak). Label also wraps as a
-        // fallback for any language where even "Lock" is too long.
-        label: () => sysLabel([['Lock', null], ['Lock Screen', 'search-result']]),
+        // No confirmation dialog, call the D-Bus method directly.
+        label: () => sysLabel([
+            ['Lock Screen', 'search-result']
+        ]),
         activate: () => SystemActions.getDefault().activateLockScreen(),
     },
     {
@@ -134,31 +140,37 @@ export const PowerMenuOverlay = GObject.registerClass({
         });
     }
 
-    // Moves focus left/right with wraparound. get_key_focus() can be
-    // null on Wayland; indexOf() already treats that as "-1 = none".
+    // Moves focus left/right with wraparound. 
     _moveFocus(direction) {
         const count = this._buttons.length;
         if (count === 0)
             return;
 
         const current = this._buttons.indexOf(global.stage.get_key_focus());
-        const next = current === -1
-            ? (direction > 0 ? 0 : count - 1)
-            : (current + direction + count) % count;
+        const next = current === -1 ?
+            (direction > 0 ? 0 : count - 1) :
+            (current + direction + count) % count;
 
         this._buttons[next].grab_key_focus();
     }
 
     _buildBackground(width, height) {
-        // Opaque backstop under the blurred background (safety net).
-        const base = new St.Widget({ reactive: false, style_class: 'power-menu-base', width, height });
+        // The base layer is a solid color used as a fallback if the blur effect fails to render for any reason.
+        const base = new St.Widget({
+            reactive: false,
+            style_class: 'power-menu-base',
+            width,
+            height
+        });
         this.add_child(base);
 
-        const blurContainer = new St.Widget({ reactive: false, width, height });
+        const blurContainer = new St.Widget({
+            reactive: false,
+            width,
+            height
+        });
 
-        // Fresh background actors, like the real lock screen uses --
-        // NOT a clone of the live desktop scene (which could bleed
-        // window content into the blur).
+        // Fresh background actors for each monitor, so the blur effect is applied to the correct
         for (let i = 0; i < Main.layoutManager.monitors.length; i++) {
             const bgManager = new Background.BackgroundManager({
                 container: blurContainer,
@@ -171,7 +183,6 @@ export const PowerMenuOverlay = GObject.registerClass({
 
         blurContainer.add_effect(new Shell.BlurEffect({
             radius: 60,
-            // Tuned by eye to match the real lock screen's dimness.
             brightness: 0.7,
             mode: Shell.BlurMode.ACTOR,
         }));
@@ -184,8 +195,7 @@ export const PowerMenuOverlay = GObject.registerClass({
             width,
             height,
         });
-        // Sibling of the button row, not an ancestor -- so it can never
-        // swallow a button's own click.
+        // Clicking anywhere outside the buttons closes the overlay. 
         dim.connect('button-press-event', () => {
             this.close();
             return Clutter.EVENT_STOP;
@@ -209,10 +219,16 @@ export const PowerMenuOverlay = GObject.registerClass({
         }
     }
 
-    _createButton({ icon, label, activate }) {
-        // Label lives inside the button, so it shares the same
-        // click/hover target as the icon.
-        const iconStack = new St.Widget({ layout_manager: new Clutter.BinLayout(), reactive: false });
+    _createButton({
+        icon,
+        label,
+        activate
+    }) {
+        // Label inside the button. Shares the same click/hover target as the icon.
+        const iconStack = new St.Widget({
+            layout_manager: new Clutter.BinLayout(),
+            reactive: false
+        });
 
         // Two identical glow layers stacked on top of each other
         const glowLayers = [];
@@ -233,8 +249,8 @@ export const PowerMenuOverlay = GObject.registerClass({
                 y_align: Clutter.ActorAlign.CENTER,
             }));
             glowLayer.add_effect(new Shell.BlurEffect({
-                radius: 18,
-                brightness: 5,
+                radius: 20,
+                brightness: 1,
                 mode: Shell.BlurMode.ACTOR,
             }));
             iconStack.add_child(glowLayer);
@@ -262,9 +278,7 @@ export const PowerMenuOverlay = GObject.registerClass({
             style_class: 'power-menu-label',
             x_align: Clutter.ActorAlign.CENTER,
         });
-        // Word-wrap fallback for languages where even the short label
-        // is too long. St.Label defaults to single-line + ellipsize, so
-        // both must be explicitly turned off for wrapping to work.
+        // Word-wrap fallback for languages where labels are too long.
         labelActor.clutter_text.set({
             line_wrap: true,
             line_wrap_mode: Pango.WrapMode.WORD_CHAR,
@@ -285,7 +299,10 @@ export const PowerMenuOverlay = GObject.registerClass({
         // :focus) so the two input methods don't visually collide.
         const setGlow = active => {
             for (const glowLayer of glowLayers)
-                glowLayer.ease({ opacity: active ? 220 : 0, duration: 150 });
+                glowLayer.ease({
+                    opacity: active ? 255 : 0,
+                    duration: 150
+                });
         };
         button.connect('notify::hover', () => setGlow(button.hover));
 
@@ -295,7 +312,7 @@ export const PowerMenuOverlay = GObject.registerClass({
             try {
                 activate();
             } catch (e) {
-                console.error(e, 'Power Menu: action failed');
+                console.error('Power Menu: action failed', e);
                 Main.notifyError(_('Power Menu'), e.message);
             }
             this.close();
@@ -308,13 +325,15 @@ export const PowerMenuOverlay = GObject.registerClass({
         const [width, height] = global.stage.get_size();
         this.set_size(width, height);
 
-        // No Main.pushModal(): a full-screen reactive widget already
-        // blocks every click; the modal grab risked breaking click
-        // delivery down into the buttons.
+        // Add to the UI group so it appears above the panel.
         Main.layoutManager.uiGroup.add_child(this);
 
         this.grab_key_focus();
-        this.ease({ opacity: 255, duration: 150, mode: Clutter.AnimationMode.EASE_OUT_QUAD });
+        this.ease({
+            opacity: 255,
+            duration: 150,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD
+        });
     }
 
     close() {
@@ -334,8 +353,7 @@ export const PowerMenuOverlay = GObject.registerClass({
     }
 
     destroy() {
-        // BackgroundManager holds a ref-counted resource that must be
-        // destroy()'d explicitly -- actor teardown alone won't release it.
+        // Destroy background managers before calling super.destroy(), so they can remove their actors from the stage first.
         this._backgroundManagers.forEach(mgr => mgr.destroy());
         this._backgroundManagers = [];
 
