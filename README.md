@@ -16,10 +16,7 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 - **One click, no sub-menu.** A single power icon in the top panel opens a
   full-screen overlay directly — no nested menu to dig through.
 - **Five actions:** Power Off, Restart, Suspend, Lock, and Log Out.
-- **Skips the extra confirmation dialog.** Power Off, Restart, and Log Out
-  normally show a second "are you sure, this happens in 60 seconds"
-  dialog — since this overlay *is* the confirmation, that second dialog is
-  bypassed, while still respecting real inhibitors (e.g. unsaved documents).
+- **Skips the extra confirmation dialog - still respecting real inhibitors (e.g. unsaved documents).
 - **Keyboard-friendly:** arrow keys move focus between actions, Enter/Space
   activates the focused one, Escape closes the menu.
 - **Click anywhere outside the buttons** to dismiss.
@@ -42,9 +39,13 @@ for quickly powering off, restarting, suspending, locking, or logging out.
        ~/.local/share/gnome-shell/extensions/power-menu@dodog.github.io
    ```
 
-3. Restart GNOME Shell:
+3. Compile gschemas:
+    ```bash
+   glib-compile-schemas ~/.local/share/gnome-shell/extensions/power-menud@dodog.github.io/schemas/
+    ```
+5. Restart GNOME Shell:
    - **Wayland:** log out and back in.
-4. Enable the extension:
+6. Enable the extension:
 
    ```bash
    gnome-extensions enable power-menu@dodog.github.io
