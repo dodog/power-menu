@@ -26,8 +26,15 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 
 - GNOME Shell 49, 50, tested on 51.beta
 
-## Installation
+## 🚀 Installation
+---------------
 
+### Method 1: 📦 Available on extensions.gnome.org:
+Install Power Menu via [extensions.gnome.org](https://extensions.gnome.org/extension/10732/power-menu//)
+
+ <a href="https://extensions.gnome.org/extension/10732/power-menu/" target="_blank"><img alt="Get it on GNOME Extensions" width="228" src="https://github.com/dodog/gotify-notifications/raw/main/assets/get-it-on-ego.svg?sanitize=true"></img></a>
+
+    
 ### Manual installation
 
 1. Download or clone this repository.
