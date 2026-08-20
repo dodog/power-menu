@@ -84,6 +84,12 @@ Click the power icon in the top panel to open the menu. From there:
 Issues and pull requests are welcome. Please test any changes on a
 GNOME Shell before submitting.
 
+## ❤️ Support
+
+Like this extension? Give it a ⭐ on GitHub. And if you really like it, you can buy me a coffee:
+
+- ☕ [Buy Me a Coffee](https://www.buymeacoffee.com/dodog)
+
 ## License
 
 GPL-3.0 see [`LICENSE`](LICENSE) for details.
