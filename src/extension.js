@@ -25,10 +25,8 @@ export default class PowerMenuExtension extends Extension {
             GLib.Source.remove(this._addIndicatorSourceId);
             this._addIndicatorSourceId = null;
         }
-        if (this._overlay) {
-            this._overlay.destroy();
-            this._overlay = null;
-        }
+
+        this._overlay?.destroy();
         if (this._indicator) {
             this._indicator.destroy();
             this._indicator = null;
@@ -41,8 +39,7 @@ export default class PowerMenuExtension extends Extension {
             return;
         }
 
-        this._overlay = new PowerMenuOverlay();
-        this._overlay.connect('destroy', () => {
+        this._overlay = new PowerMenuOverlay(() => {
             this._overlay = null;
         });
         this._overlay.open();

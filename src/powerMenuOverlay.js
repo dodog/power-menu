@@ -105,25 +105,31 @@ const ACTIONS = [{
 export const PowerMenuOverlay = GObject.registerClass({
     GTypeName: 'PowerMenuExtension_PowerMenuOverlay',
 }, class PowerMenuOverlay extends St.Widget {
-    constructor() {
-        const [width, height] = global.stage.get_size();
+    constructor(onClosed) {
+        // Fix for multiple monitors
+        const monitor = Main.layoutManager.currentMonitor ?? Main.layoutManager.primaryMonitor;
 
         super({
             layout_manager: new Clutter.BinLayout(),
             reactive: true,
             can_focus: true,
             accessible_role: Atk.Role.DIALOG,
-            x: 0,
-            y: 0,
-            width,
-            height,
+            x: monitor.x,
+            y: monitor.y,
+            width: monitor.width,
+            height: monitor.height,
             opacity: 0,
         });
 
-        this._backgroundManagers = [];
+        this._monitor = monitor;
+
+        // Called directly from destroy() below, so that the overlay can be reopened after a normal close.
+        this._onClosed = onClosed;
+
+        this._backgroundManager = null;
         this._buttons = [];
 
-        this._buildBackground(width, height);
+        this._buildBackground(monitor.width, monitor.height);
         this._buildButtons();
 
         this.connect('key-press-event', (_actor, event) => {
@@ -170,16 +176,13 @@ export const PowerMenuOverlay = GObject.registerClass({
             height
         });
 
-        // Fresh background actors for each monitor, so the blur effect is applied to the correct
-        for (let i = 0; i < Main.layoutManager.monitors.length; i++) {
-            const bgManager = new Background.BackgroundManager({
-                container: blurContainer,
-                layoutManager: Main.layoutManager,
-                monitorIndex: i,
-                vignette: false,
-            });
-            this._backgroundManagers.push(bgManager);
-        }
+        // Only blur the screen where it actually appears
+        this._backgroundManager = new Background.BackgroundManager({
+            container: blurContainer,
+            layoutManager: Main.layoutManager,
+            monitorIndex: this._monitor.index,
+            vignette: false,
+        });
 
         blurContainer.add_effect(new Shell.BlurEffect({
             radius: 60,
@@ -322,9 +325,6 @@ export const PowerMenuOverlay = GObject.registerClass({
     }
 
     open() {
-        const [width, height] = global.stage.get_size();
-        this.set_size(width, height);
-
         // Add to the UI group so it appears above the panel.
         Main.layoutManager.uiGroup.add_child(this);
 
@@ -341,9 +341,6 @@ export const PowerMenuOverlay = GObject.registerClass({
             return;
         this._closing = true;
 
-        if (this.get_parent())
-            this.get_parent().remove_child(this);
-
         this.ease({
             opacity: 0,
             duration: 150,
@@ -353,9 +350,11 @@ export const PowerMenuOverlay = GObject.registerClass({
     }
 
     destroy() {
-        // Destroy background managers before calling super.destroy(), so they can remove their actors from the stage first.
-        this._backgroundManagers.forEach(mgr => mgr.destroy());
-        this._backgroundManagers = [];
+        // Clean up the background manager
+        this._backgroundManager?.destroy();
+        this._backgroundManager = null;
+
+        this._onClosed?.();
 
         super.destroy();
     }
