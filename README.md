@@ -16,7 +16,7 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 - **One click, no sub-menu.** A single power icon in the top panel opens a
   full-screen overlay directly — no nested menu to dig through.
 - **Five actions:** Power Off, Restart, Suspend, Lock, and Log Out.
-- **Skips the extra confirmation dialog - still respecting real inhibitors (e.g. unsaved documents).
+- **Skips the extra confirmation dialog** - still respecting real inhibitors (e.g. unsaved documents).
 - **Keyboard-friendly:** arrow keys move focus between actions, Enter/Space
   activates the focused one, Escape closes the menu.
 - **Click anywhere outside the buttons** to dismiss.
@@ -24,7 +24,7 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 
 ## Requirements
 
-- GNOME Shell 49, 50, tested on 51.beta
+- GNOME Shell 48, 49, 50, tested on 51.beta
 
 ## 🚀 Installation
 ---------------
