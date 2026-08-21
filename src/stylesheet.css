@@ -60,4 +60,5 @@
      * overflowing; see line_wrap in powerMenuOverlay.js. */
     width: 96px;
     line-height: 1.15;
+    height: 34px;
 }
