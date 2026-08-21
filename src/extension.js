@@ -27,10 +27,8 @@ export default class PowerMenuExtension extends Extension {
         }
 
         this._overlay?.destroy();
-        if (this._indicator) {
-            this._indicator.destroy();
-            this._indicator = null;
-        }
+        this._indicator.destroy();
+        this._indicator = null;
     }
 
     toggleOverlay() {

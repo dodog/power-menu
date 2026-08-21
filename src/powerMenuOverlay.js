@@ -14,15 +14,8 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 // Reuses gnome-shell's own translations
 // Tries a few known msgid/context candidates per string
-function sysLabel(candidates) {
-    for (const [msgid, context] of candidates) {
-        const translated = context ?
-            GLib.dpgettext2('gnome-shell', context, msgid) :
-            GLib.dgettext('gnome-shell', msgid);
-        if (translated !== msgid)
-            return translated;
-    }
-    return candidates[0][0];
+function sysLabel(msgid) {
+    return GLib.dpgettext2('gnome-shell', 'search-result', msgid);
 }
 
 // Lock/Suspend use SystemActions directly (no confirmation dialog).
@@ -61,43 +54,28 @@ function sessionLogout(mode) {
 
 const ACTIONS = [{
         icon: 'system-shutdown-symbolic',
-        label: () => sysLabel([
-            ['Power Off', 'search-result'],
-            ['Power Off', null]
-        ]),
+        label: () => sysLabel('Power Off'),
         activate: () => login1('PowerOff'),
     },
     {
         icon: 'system-reboot-symbolic',
-        label: () => sysLabel([
-            ['Restart', 'search-result'],
-            ['Restart', null]
-        ]),
+        label: () => sysLabel('Restart'),
         activate: () => login1('Reboot'),
     },
     {
         icon: 'weather-clear-night-symbolic',
-        label: () => sysLabel([
-            ['Suspend', null]
-        ]),
+        label: () => sysLabel('Suspend'),
         activate: () => SystemActions.getDefault().activateSuspend(),
     },
     {
         icon: 'system-lock-screen-symbolic',
         // No confirmation dialog, call the D-Bus method directly.
-        label: () => sysLabel([
-            ['Lock Screen', 'search-result']
-        ]),
+        label: () => sysLabel('Lock Screen'),
         activate: () => SystemActions.getDefault().activateLockScreen(),
     },
     {
         icon: 'system-log-out-symbolic',
-        label: () => sysLabel([
-            ['Log Out', 'search-result'],
-            ['Log out', 'search-result'],
-            ['Log Out', null],
-            ['Log Out…', null],
-        ]),
+        label: () => sysLabel('Log Out'),
         activate: () => sessionLogout(1), // 1 = NoConfirmation
     },
 ];
@@ -107,7 +85,7 @@ export const PowerMenuOverlay = GObject.registerClass({
 }, class PowerMenuOverlay extends St.Widget {
     constructor(onClosed) {
         // Fix for multiple monitors
-        const monitor = Main.layoutManager.currentMonitor ?? Main.layoutManager.primaryMonitor;
+        const monitor = Main.layoutManager.currentMonitor;
 
         super({
             layout_manager: new Clutter.BinLayout(),
@@ -149,9 +127,6 @@ export const PowerMenuOverlay = GObject.registerClass({
     // Moves focus left/right with wraparound. 
     _moveFocus(direction) {
         const count = this._buttons.length;
-        if (count === 0)
-            return;
-
         const current = this._buttons.indexOf(global.stage.get_key_focus());
         const next = current === -1 ?
             (direction > 0 ? 0 : count - 1) :
@@ -351,10 +326,10 @@ export const PowerMenuOverlay = GObject.registerClass({
 
     destroy() {
         // Clean up the background manager
-        this._backgroundManager?.destroy();
+        this._backgroundManager.destroy();
         this._backgroundManager = null;
 
-        this._onClosed?.();
+        this._onClosed();
 
         super.destroy();
     }
