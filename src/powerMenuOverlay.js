@@ -106,6 +106,7 @@ export const PowerMenuOverlay = GObject.registerClass({
 
         this._backgroundManager = null;
         this._buttons = [];
+        this._grab = null;
 
         this._buildBackground(monitor.width, monitor.height);
         this._buildButtons();
@@ -303,6 +304,9 @@ export const PowerMenuOverlay = GObject.registerClass({
         // Add to the UI group so it appears above the panel.
         Main.layoutManager.uiGroup.add_child(this);
 
+        // Fix for blur effect being broken by a fullscreen app  
+        this._grab = Main.pushModal(this);
+
         this.grab_key_focus();
         this.ease({
             opacity: 255,
@@ -328,6 +332,10 @@ export const PowerMenuOverlay = GObject.registerClass({
         // Clean up the background manager
         this._backgroundManager.destroy();
         this._backgroundManager = null;
+
+        // unblock unredirection
+        Main.popModal(this._grab);
+        this._grab = null;
 
         this._onClosed();
 
