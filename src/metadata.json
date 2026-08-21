@@ -4,5 +4,5 @@
     "description": "Adds a power button to the top panel. Clicking it opens a beautiful full-screen menu with a blurred background and buttons for Power Off, Restart, Suspend, Lock and Log Out. Click anywhere outside the buttons (or press Escape) to dismiss.",
     "shell-version": ["48", "49", "50"],
     "url": "https://github.com/dodog/power-menu",
-    "version-name": "1.0.3"
+    "version-name": "1.0.4"
 }
