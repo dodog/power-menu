@@ -5,21 +5,57 @@ jobs:
   eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6  # v6 supports Node.js 24
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install ESLint
         run: npm install eslint@^9.0.0 @eslint/js@^9.0.0
+
       - name: Lint with GJS rules
         run: npx eslint src
 
   ego-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+
+      - name: Cache ego-lint
+        uses: actions/cache@v4
+        id: cache-ego
+        with:
+          path: .ego-lint
+          key: ${{ runner.os }}-ego-lint-v0.1.31
+
       - name: Fetch ego-lint
-        uses: actions/checkout@v4
+        if: steps.cache-ego.outputs.cache-hit != 'true'
+        uses: actions/checkout@v7
         with:
           repository: ZviBaratz/gnome-extension-reviewer
           ref: v0.1.31
           path: .ego-lint
+
       - name: Run EGO compliance checks
         run: .ego-lint/ego-lint --report src
+
+  codeql:
+    name: 'CodeQL Security Scan'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: 'javascript'
+
+      - uses: github/codeql-action/analyze@v3
