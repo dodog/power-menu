@@ -1,6 +1,11 @@
 name: Validate GNOME Extension
 on: [push, pull_request]
 
+permissions:
+  contents: read       
+  security-events: write  
+  actions: read        
+
 jobs:
   eslint:
     runs-on: ubuntu-latest
