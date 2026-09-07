@@ -36,29 +36,18 @@ Install Power Menu via [extensions.gnome.org](https://extensions.gnome.org/exten
 
     
 ### Method 2: Manual installation
+ ```bash
 
-1. Download or clone this repository.
-2. Copy the extension folder into your local extensions directory, named
-   after its UUID:
+# Download or clone this repository.
+git clone https://github.com/dodog/power-menu.git
 
-   ```bash
-   git clone https://github.com/dodog/power-menu.git \
-       ~/.local/share/gnome-shell/extensions/power-menu@dodog.github.io
+# Copy to extensions directory
+cp \-r power-menu/src ~/.local/share/gnome-shell/extensions/power-menu@dodog.github.io
+
+# Log out and log in, then enable the extension:
+gnome-extensions enable power-menu@dodog.github.io
    ```
 
-3. Compile gschemas:
-    ```bash
-   glib-compile-schemas ~/.local/share/gnome-shell/extensions/power-menud@dodog.github.io/schemas/
-    ```
-5. Restart GNOME Shell:
-   - **Wayland:** log out and back in.
-6. Enable the extension:
-
-   ```bash
-   gnome-extensions enable power-menu@dodog.github.io
-   ```
-
-   or use the **Extensions** app (`gnome-extensions-app`) to toggle it on.
 
 ## Usage
 
