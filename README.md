@@ -1,3 +1,9 @@
+[![My GNOME Extensions](https://img.shields.io/badge/My_other_GNOME_Extensions-grey?style=for-the-badge&logo=gnome&logoColor=white)](#)
+[![Extension 1](https://img.shields.io/badge/-Gotify_notifications-blue?style=for-the-badge&logo=gnome&logoColor=white&labelColor=555555)](https://github.com/dodog/gotify-notifications)
+[![Extension 2](https://img.shields.io/badge/-Power_menu-orange?style=for-the-badge&logo=gnome&logoColor=white&labelColor=555555)](https://github.com/dodog/power-menu)
+[![Extension 3](https://img.shields.io/badge/-Vertigrid-green?style=for-the-badge&logo=gnome&logoColor=white&labelColor=555555)](https://github.com/dodog/vertigrid)
+
+
 # Power Menu
 
 A GNOME Shell extension that adds a power button to the top panel. Clicking
