@@ -30,7 +30,7 @@ for quickly powering off, restarting, suspending, locking, or logging out.
 
 ## Requirements
 
-- GNOME Shell 48, 49, 50, tested on 51.beta
+- GNOME Shell 48, 49, 50, 51
 
 ## 🚀 Installation
 ---------------
